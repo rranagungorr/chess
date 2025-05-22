@@ -16,25 +16,115 @@ public class ChessClient extends JFrame {
     private ChessBoardPanel boardPanel;
 
     // Lobi arayüzü
+    private JPanel loginPanel;
     private JPanel lobbyPanel;
     private JPanel gamePanel;
     private JLabel statusLabel;
     private JButton startGameButton;
 
+    private String username = "";
+
     public ChessClient() {
-        setTitle("Chess Client");
-        setSize(600, 600);
+        setTitle("Chess Game");
+        setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new CardLayout());
 
+        initLoginPanel();
         initLobbyPanel();
         initGamePanel();
 
+        add(loginPanel, "Login");
         add(lobbyPanel, "Lobby");
-        add(boardPanel, "Game");
+        add(gamePanel, "Game");
 
-        showLobby();
+        showLogin();
         setVisible(true);
+    }
+
+    
+    private JTextField usernameField;
+
+   private void initLoginPanel() {
+    loginPanel = new JPanel() {
+        private final Image backgroundImage = new ImageIcon(getClass().getResource("/pieces/chesslogin.jpeg")).getImage();
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    };
+    loginPanel.setLayout(new GridBagLayout()); // Ortalamak için
+
+    JPanel containerPanel = new JPanel();
+    containerPanel.setOpaque(false);
+    containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+    containerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    // Başlık - CHESS GAME
+    JLabel title = new JLabel("CHESS GAME");
+    title.setFont(new Font("Serif", Font.BOLD, 60));
+    title.setForeground(Color.WHITE);
+    title.setAlignmentX(Component.CENTER_ALIGNMENT);
+    title.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+
+    // Kullanıcı Adı Etiketi
+    JLabel userLabel = new JLabel("Kullanıcı Adı:");
+    userLabel.setFont(new Font("SansSerif", Font.BOLD, 18)); // Kalın yazı
+    userLabel.setForeground(Color.WHITE);
+    userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    // Kullanıcı Adı Alanı
+    usernameField = new JTextField();
+    usernameField.setMaximumSize(new Dimension(250, 35));
+    usernameField.setFont(new Font("SansSerif", Font.PLAIN, 16));
+    usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    usernameField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+    // Başlat Butonu
+    JButton startButton = new JButton("Oyuna Başla");
+    startButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+    startButton.setBackground(new Color(51, 25, 0)); // Kahverengi
+    startButton.setForeground(Color.WHITE);
+    startButton.setFocusPainted(false);
+    startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    startButton.setMaximumSize(new Dimension(180, 45));
+    startButton.setMargin(new Insets(10, 10, 10, 10));
+    startButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+    // Dikey boşluklarla ekle
+    containerPanel.add(title);
+    containerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+    containerPanel.add(userLabel);
+    containerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+    containerPanel.add(usernameField);
+    containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+    containerPanel.add(startButton);
+
+    // Ortaya ekle
+    loginPanel.add(containerPanel);
+
+    // Buton İşlevi
+    startButton.addActionListener(e -> {
+        String username = usernameField.getText().trim();
+        if (!username.isEmpty()) {
+            log("👤 Kullanıcı adı: " + username);
+            showLobby();
+        } else {
+            JOptionPane.showMessageDialog(this, "Lütfen bir kullanıcı adı girin.");
+        }
+    });
+}
+
+
+
+
+    public void showLogin() {
+        getContentPane().removeAll();
+        getContentPane().add(loginPanel);
+        revalidate();
+        repaint();
     }
 
     private boolean gameOver = false;
@@ -113,6 +203,7 @@ public class ChessClient extends JFrame {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             connected = true;
+            out.println("USERNAME " + username);
             statusLabel.setText("Bağlandı. Eşleşme bekleniyor...");
             log("Sunucuya bağlandı.");
 
