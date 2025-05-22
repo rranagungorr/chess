@@ -1,0 +1,4 @@
+Client\ChessBoardPanel.class
+Client\ChessClient.class
+Server\ChessServer$ClientHandler.class
+Server\ChessServer.class
