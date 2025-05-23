@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.mycompany.chess.Server.ChessServer</mainClass>
+                            <mainClass>com.mycompany.Server.ChessServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
