@@ -368,26 +368,25 @@ public class ChessBoardPanel extends JPanel {
 
             String pieceName = ((ImageIcon) piece).getDescription();
 
-            // Rok kontrolü (sadece gönder, uygulama sunucudan gelen MOVE ile yapılacak)
+            // Rok kontrolü
             if (pieceName.endsWith("k.png") && isCastlingMoveValid(selectedRow, selectedCol, row, col, pieceName)) {
                 client.sendMove(selectedRow, selectedCol, row, col, null, true);
+                client.setCurrentTurn(1 - client.getCurrentTurn()); // 🧠 TURU GÜNCELLE
                 selected = null;
                 return;
             }
 
-            // ♚ Şah tehdit altındaysa sadece şahı kurtaran hamlelere izin ver
+            // Şah tehdit altındaysa kontrol
             boolean currentPlayerWhite = client.getPlayerId() == 1;
             if (isKingInCheck(currentPlayerWhite)) {
                 Icon originalTarget = squares[row][col].getIcon();
                 Icon pieceIcon = squares[selectedRow][selectedCol].getIcon();
 
-                // Geçici hamleyi uygula
                 squares[row][col].setIcon(pieceIcon);
                 squares[selectedRow][selectedCol].setIcon(null);
 
                 boolean stillInCheck = isKingInCheck(currentPlayerWhite);
 
-                // Hamleyi geri al
                 squares[selectedRow][selectedCol].setIcon(pieceIcon);
                 squares[row][col].setIcon(originalTarget);
 
@@ -409,10 +408,12 @@ public class ChessBoardPanel extends JPanel {
                 String newPiece = showPromotionDialog(pieceName.startsWith("w") ? "white" : "black");
                 if (newPiece != null) {
                     selected.setIcon(loadIcon(newPiece));
-                    client.sendMove(selectedRow, selectedCol, row, col, newPiece, false); // ✔️ terfi ama rok değil
+                    client.sendMove(selectedRow, selectedCol, row, col, newPiece, false);
+                    client.setCurrentTurn(1 - client.getCurrentTurn()); // 🧠 TURU GÜNCELLE
                 }
             } else {
-                client.sendMove(selectedRow, selectedCol, row, col, null, false); // ✔️ normal hamle
+                client.sendMove(selectedRow, selectedCol, row, col, null, false);
+                client.setCurrentTurn(1 - client.getCurrentTurn()); // 🧠 TURU GÜNCELLE
             }
 
             selected = null;
