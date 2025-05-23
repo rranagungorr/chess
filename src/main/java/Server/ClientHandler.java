@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private GameSession gameSession;
+     
 
     public ClientHandler(Socket socket) {
         this.socket = socket;

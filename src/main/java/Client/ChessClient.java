@@ -15,6 +15,7 @@ public class ChessClient extends JFrame {
     private boolean connected = false;
     private ChessBoardPanel boardPanel;
 
+    
     // Lobi arayüzü
     private JPanel loginPanel;
     private JPanel lobbyPanel;
