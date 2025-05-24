@@ -14,7 +14,7 @@ public class ChessServer {
     public static void main(String[] args) {
         System.out.println("🟢 Satranç Sunucusu başlatılıyor...");
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT,50, InetAddress.getByName("51.21.170.158") )) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("🔌 Yeni bağlantı: " + socket.getInetAddress());
