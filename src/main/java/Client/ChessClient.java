@@ -7,7 +7,7 @@ import java.net.*;
 
 public class ChessClient extends JFrame {
 
-    private JTextField ipField = new JTextField("127.0.0.1", 15);
+    private JTextField ipField = new JTextField("51.21.170.158", 15);
     private JTextArea logArea;
     private PrintWriter out;
     private int playerId = -1;
